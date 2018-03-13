@@ -1,0 +1,13 @@
+# intellij
+.idea
+*.iml
+/out
+
+# exercises
+/exercises-json
+/jdbc
+*examples
+/test
+
+#lab 3
+/lab3
