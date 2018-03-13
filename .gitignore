@@ -8,6 +8,7 @@
 /jdbc
 *examples
 *test
+*.csv
 
 #lab 3
 /lab3
