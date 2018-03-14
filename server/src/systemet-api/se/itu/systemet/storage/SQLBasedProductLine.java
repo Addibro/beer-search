@@ -16,11 +16,11 @@ import se.itu.systemet.domain.Product;
 public class SQLBasedProductLine implements ProductLine {
 
   private List<Product> products;
-  private DBHelper.ColumnId columnId;
 
   // Prevent instantiation from outside this package
   SQLBasedProductLine() { }
   
+  @Override
   public List<Product> getProductsFilteredBy(Predicate<Product> predicate) {
     if (products == null) {
       readProductsFromDatabase();
@@ -30,6 +30,7 @@ public class SQLBasedProductLine implements ProductLine {
             .collect(Collectors.toList());
   }
   
+  @Override
   public List<Product> getAllProducts() {
     if (products == null) {
       readProductsFromDatabase();
@@ -38,20 +39,18 @@ public class SQLBasedProductLine implements ProductLine {
   }
 
   private void readProductsFromDatabase() {
-    /* You will get code to get you started here in Lab 3 */
-    /* Write and use the FakeProductLine for now! */
     products = new ArrayList<>();
 
     ResultSet rs = DBHelper.productsResultSet();
     try {
       while (rs.next()) {
         String name = rs.getString(DBHelper.ColumnId.NAME);
-        double price = rs.getDouble(DBHelper.ColumnId.PRICE);// SEK
-        double alcohol = rs.getDouble(DBHelper.ColumnId.ALCOHOL); // % alcohol by volume
-        int volume = rs.getInt(DBHelper.ColumnId.VOLUME); // milliliters
-        int nr = rs.getInt(DBHelper.ColumnId.PRODUCT_NR); // XML: <nr>nnn</nr> unique nr in the catalog
-        String productGroup = rs.getString(DBHelper.ColumnId.PRODUCT_GROUP); // e.g. <Varugrupp>Okryddad sprit</Varugrupp>
-        String type = rs.getString(DBHelper.ColumnId.TYPE); // e.g. <Typ>Syrlig öl</Typ>
+        double price = rs.getDouble(DBHelper.ColumnId.PRICE);
+        double alcohol = rs.getDouble(DBHelper.ColumnId.ALCOHOL); 
+        int volume = rs.getInt(DBHelper.ColumnId.VOLUME); 
+        int nr = rs.getInt(DBHelper.ColumnId.PRODUCT_NR); 
+        String productGroup = rs.getString(DBHelper.ColumnId.PRODUCT_GROUP); 
+        String type = rs.getString(DBHelper.ColumnId.TYPE); 
 
         products.add(new Product.Builder()
                 .name(name)

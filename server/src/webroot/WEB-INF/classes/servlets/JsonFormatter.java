@@ -6,9 +6,13 @@ import se.itu.systemet.storage.JsonExporter;
 import se.itu.systemet.domain.Product;
 
 public class JsonFormatter implements Formatter {
+  /**
+   * Produces a String with json sturcture
+   */
   @Override
   public String format(List<Product> products) {
     StringBuilder json = new StringBuilder("[\n");
+    // JsonExporter is used to create a single json object
     JsonExporter jsonExp = new JsonExporter();
     int lastIndex = products.size() - 1;
     int index = 0;

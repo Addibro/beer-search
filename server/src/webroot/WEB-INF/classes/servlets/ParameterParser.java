@@ -16,6 +16,7 @@ public class ParameterParser {
   }
 
   public Predicate<Product> filter() {
+
     List<Predicate<Product>> predicates = parse(); // get a list of predicates
     // Reduce the list of predicates using "and"
     // https://docs.oracle.com/javase/tutorial/collections/streams/reduction.html
@@ -32,32 +33,35 @@ public class ParameterParser {
     }
   }
 
-  private boolean isValidKey(String key) {
+  private boolean isValid(String key) {
+    // check that each parameter has length 2  
     return key.split("=").length==2 &&
+      // and if the parameter key is equal to one of these strings
       Arrays.stream(new String[] {
           "min_price",
           "max_price",
           "min_alcohol",
           "max_alcohol"
-        }).collect(Collectors.toList()).contains(key.split("=")[0]);
+        }).collect(Collectors.toList())
+          .contains(key.split("=")[0]);
   }
   
   private List<Predicate<Product>> parse() {
-    // create a list of predicates of type Product
+    // create a list of predicates of type argument Product
     List<Predicate<Product>> predicates = new ArrayList<>();
 
     // create a list of valid arguments, which are passed to this constructor
     List<String> validArgs = new ArrayList<>(Arrays.asList(args));
 
     // remove an argument if the key is invalid or the value is NAN
-    validArgs.removeIf(s -> !isValidKey(s) || !isDouble(s.split("=")[1]));
+    validArgs.removeIf(s -> !isValid(s) || !isDouble(s.split("=")[1]));
 
     // for each valid argument
     for (String arg : validArgs) {
       // get the value (as Double)
       double value = Double.parseDouble(arg.split("=")[1]);
 
-      switch(arg.split("=")[0]) { // Check what filter it is
+      switch (arg.split("=")[0]) { // Check what query parameter it is
         // if max_price, add a predicate to the predicate list
         // such that p (Product) has a price which is less or equal to the variable value
         case "max_price": predicates.add(p -> p.price() <= value);
@@ -73,12 +77,5 @@ public class ParameterParser {
       }
     }
     return predicates;
-  }
-
-  public List<String> invalidArgs() {
-    List<String> invalids = Arrays.stream(args)
-      .filter(a->!isValidKey(a) || !isDouble(a.split("=")[1]))
-      .collect(Collectors.toList());
-    return invalids;
   }
 }

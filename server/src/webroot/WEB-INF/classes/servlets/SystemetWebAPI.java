@@ -22,14 +22,17 @@ public class SystemetWebAPI extends HttpServlet{
     System.setProperty("ProductLine", getServletContext().getInitParameter("ProductLine"));
     Locale.setDefault(Locale.ENGLISH);
   }
-  
+  /**
+   * Used to print an json array filled with json objects, 
+   * representing beer products
+   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException{
     // set the char encoding to UTF_8
     request.setCharacterEncoding(UTF_8.name());
     // set content type to application/json
-    response.setContentType("application/json;charset="+UTF_8.name());
+    response.setContentType("application/json;charset=" + UTF_8.name());
     PrintWriter out =
       new PrintWriter(new OutputStreamWriter(response.getOutputStream(),
                                              UTF_8), true);
@@ -46,7 +49,7 @@ public class SystemetWebAPI extends HttpServlet{
     // create a list of Products which is filteted by our newly created filter
     List<Product> products = productLine.getProductsFilteredBy(filter);
 
-    // get a formatter (json)
+    // get a formatter (JsonFormatter)
     Formatter formatter = FormatterFactory.getFormatter();
 
     // format the products to a String
