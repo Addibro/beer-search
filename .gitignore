@@ -3,6 +3,9 @@
 *.iml
 /out
 
+# vscode
+/.vscode
+
 # exercises
 /exercises-json
 /jdbc
