@@ -54,8 +54,9 @@ public class SystemetWebAPI extends HttpServlet{
 
     // format the products to a String
     String json = formatter.format(products);
-//    System.out.println("json string: " + json);
     StringBuilder sb = new StringBuilder(json);
+    
+    // print the json string to the response stream
     out.println(sb.toString());
     out.close();
   }
