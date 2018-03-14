@@ -65,10 +65,5 @@ public class SQLBasedProductLine implements ProductLine {
     } catch (SQLException ex) {
       System.err.println("Problem with sql: " + ex.getSQLState());
     }
-
-    products.add(new Product.Builder()
-            .name("Test")
-            .build());
-
   }  
 }
