@@ -1,4 +1,4 @@
-# booze-search :beer:
+# booze-search :beers:
 
 ## how to run
 1. (do chmod u+x run_servlet first) `./run_servlet.sh`
