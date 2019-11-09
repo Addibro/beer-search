@@ -6,9 +6,14 @@ package se.itu.systemet.rest;
 public class ApiAccessFactory {
   /**
    * Returns an implementation of ApiAccess.
+   * 
    * @return An implementation of ApiAccess.
    */
   public static ApiAccess getApiAccess() {
     return new SystemetRestApiAccess();
+  }
+
+  public static ApiAccess getHttpApiAccess() {
+    return new HttpApiAccess();
   }
 }

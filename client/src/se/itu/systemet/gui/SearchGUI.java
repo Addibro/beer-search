@@ -15,29 +15,30 @@ import se.itu.systemet.rest.Query;
 import se.itu.systemet.rest.QueryFactory;
 
 /**
- * A class representing the GUI for an application for
- * searching Systembolaget products.
+ * A class representing the GUI for an application for searching Systembolaget
+ * products.
  */
 public class SearchGUI {
-  // Instance variables below - mostly Swing components for the UI  
+  // Instance variables below - mostly Swing components for the UI
   private JFrame frame; // this is the actual window
   private JPanel panel; // a panel is a surface to put other components on
   private JPanel search;
   private JTable table; // A table which looks like a spread sheet, kind of
   // input fields for searching
-  private JTextField minAlcoField; 
-  private JTextField maxAlcoField; 
+  private JTextField minAlcoField;
+  private JTextField maxAlcoField;
   private JTextField minPriceField;
   private JTextField maxPriceField;
   private List<Product> products;
   private ApiAccess api; // For talking to the REST API
   private JButton clearButton;
-  
+
   public SearchGUI() {
-    api = ApiAccessFactory.getApiAccess();    
+    api = ApiAccessFactory.getHttpApiAccess();
     products = api.fetch(QueryFactory.getQuery());
     init(); // Initiate the components
     show(); // Show the frame
+    System.out.println("GUI started!");
   }
 
   private void init() {
@@ -46,7 +47,7 @@ public class SearchGUI {
     frame.setLayout(new BorderLayout());
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     panel = new JPanel(new GridLayout(1, 0));
-    GridLayout formLayout = new GridLayout(2,4);
+    GridLayout formLayout = new GridLayout(2, 4);
     search = new JPanel(formLayout);
     formLayout.setVgap(2);
     formLayout.setHgap(4);
@@ -93,18 +94,19 @@ public class SearchGUI {
 
   private void addListeners() {
     for (JTextField textField : textFields()) {
-      textField.getDocument()
-        .addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-              newFilter();
-            }
-            public void insertUpdate(DocumentEvent e) {
-              newFilter();
-            }
-            public void removeUpdate(DocumentEvent e) {
-              newFilter();
-            }
-          });          
+      textField.getDocument().addDocumentListener(new DocumentListener() {
+        public void changedUpdate(DocumentEvent e) {
+          newFilter();
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+          newFilter();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+          newFilter();
+        }
+      });
     }
 
     clearButton.addActionListener((e) -> textFields().forEach(event -> event.setText("")));
@@ -114,26 +116,26 @@ public class SearchGUI {
   private List<Param> params() {
     List<Param> params = new ArrayList<>();
     if (!"".equals(minAlcoField.getText())) {
-      params.add(new Param("min_alcohol", minAlcoField.getText()));
+      params.add(new Param("AlcoholPercentageMin", minAlcoField.getText()));
     }
     if (!"".equals(maxAlcoField.getText())) {
-      params.add(new Param("max_alcohol", maxAlcoField.getText()));
+      params.add(new Param("AlcoholPercentageMax", maxAlcoField.getText()));
     }
     if (!"".equals(minPriceField.getText())) {
-      params.add(new Param("min_price", minPriceField.getText()));
+      params.add(new Param("PriceMin", minPriceField.getText()));
     }
     if (!"".equals(maxPriceField.getText())) {
-      params.add(new Param("max_price", maxPriceField.getText()));
+      params.add(new Param("PriceMax", maxPriceField.getText()));
     }
     return params;
   }
-  
+
   private void newFilter() {
     Query query = QueryFactory.getQuery();
-    for (Param param : params() ) {
+    for (Param param : params()) {
       query.addParam(param);
     }
-//    System.out.println("Query: " + query.toQueryString());
+    // System.out.println("Query: " + query.toQueryString());
 
     table.setModel(new ProductTableModel(api.fetch(query)));
   }

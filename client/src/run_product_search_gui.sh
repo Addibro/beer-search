@@ -7,4 +7,4 @@ then
 fi
 CP=".${PATHSEP}lib/org.json.jar"
 #CP="."
-java -cp $CP se.itu.systemet.main.ProductSearch
+java -cp .:lib/org.json.jar:lib/httpclient-4.5.10.jar se.itu.systemet.main.ProductSearch
