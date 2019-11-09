@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -29,6 +31,7 @@ public class SearchGUI {
   private JTextField maxAlcoField;
   private JTextField minPriceField;
   private JTextField maxPriceField;
+  private List<JTextField> paramFields;
   private List<Product> products;
   private ApiAccess api; // For talking to the REST API
   private JButton clearButton;
@@ -62,9 +65,14 @@ public class SearchGUI {
     panel.setOpaque(true);
     frame.add(panel, BorderLayout.CENTER);
     minPriceField = new JTextField(6);
+    minPriceField.setName("PriceMin");
     maxPriceField = new JTextField(6);
+    maxPriceField.setName("PriceMax");
     minAlcoField = new JTextField(3);
+    minAlcoField.setName("AlcoholPercentageMin");
     maxAlcoField = new JTextField(3);
+    maxAlcoField.setName("AlcoholPercentageMax");
+    paramFields = Arrays.asList(minPriceField, maxPriceField, minAlcoField, maxAlcoField);
     GridLayout clearLayout = new GridLayout(1, 0);
     clearButton = new JButton("Clear");
     clearButton.setPreferredSize(new Dimension(100, 100));
@@ -114,25 +122,14 @@ public class SearchGUI {
   }
 
   private List<Param> params() {
-    List<Param> params = new ArrayList<>();
-    if (!"".equals(minAlcoField.getText())) {
-      params.add(new Param("AlcoholPercentageMin", minAlcoField.getText()));
-    }
-    if (!"".equals(maxAlcoField.getText())) {
-      params.add(new Param("AlcoholPercentageMax", maxAlcoField.getText()));
-    }
-    if (!"".equals(minPriceField.getText())) {
-      params.add(new Param("PriceMin", minPriceField.getText()));
-    }
-    if (!"".equals(maxPriceField.getText())) {
-      params.add(new Param("PriceMax", maxPriceField.getText()));
-    }
-    return params;
+    return paramFields.stream().filter(field -> !field.getText().isEmpty()).map(Param::new)
+        .collect(Collectors.toList());
   }
 
   private void newFilter() {
     Query query = QueryFactory.getQuery();
-    for (Param param : params()) {
+    List<Param> paramList = params();
+    for (Param param : paramList) {
       query.addParam(param);
     }
     // System.out.println("Query: " + query.toQueryString());
